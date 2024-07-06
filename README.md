@@ -3,7 +3,7 @@
 
 CDK Construct for creating wrapper Lambda@Edge functions for MediaPackage endpoints
 * You can define two Lambda@Edge functions, each intended for manipulating HLS and DASH manifest
-* Each function needs to be stored in a TypeScript (.ts) file and its relative path needs to be passed
+* Each function needs to be stored in a TypeScript (.ts) file and its path needs to be passed
 * The created Lambda@Edge functions will be set as ORIGIN_REQUEST triggers of a newly created CloudFront distribution
 
 **Input:**
@@ -20,6 +20,7 @@ CDK Construct for creating wrapper Lambda@Edge functions for MediaPackage endpoi
 ## Usage
 ```ts
 import { Stack, StackProps, CfnOutput, Fn } from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/lambda';
 import { Construct } from 'constructs';
 import { LiveChannelFromMp4 } from 'awscdk-construct-live-channel-from-mp4-file';
 import { Wrapper } from 'awscdk-construct-mediapackage-wrapper';
@@ -42,8 +43,8 @@ export class ExampleStack extends Stack {
     // Create wrapper L@E functions
     const wrapper = new Wrapper(stack, 'Wrapper', {
       domainName: Fn.select(2, hlsArr),
-      hlsWrapperFunctionSourcePath: './code/hls/index.ts',
-      dashWrapperFunctionSourcePath: './code/dash/index.ts',
+      hlsWrapperFunction: lambda.Code.fromAsset('./func/hls/')),
+      dashWrapperFunction: lambda.Code.fromAsset('./func/dash/')),
     });
 
     // Print MediaPackage endpoint URL (HLS)
